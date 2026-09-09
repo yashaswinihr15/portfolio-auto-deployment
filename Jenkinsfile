@@ -21,6 +21,9 @@ pipeline {
                 echo 'Deploying to Kubernetes...'
 
                 sh '''
+                    export KUBECONFIG=/var/jenkins_home/.kube/config
+
+                    kubectl config view --minify
                     kubectl apply -f ${WORKSPACE}/k8s/
 
                     kubectl set image deployment/portfolio-deployment \
@@ -34,6 +37,8 @@ pipeline {
                 echo 'Verifying Kubernetes deployment...'
 
                 sh '''
+                    export KUBECONFIG=/var/jenkins_home/.kube/config
+
                     kubectl rollout status deployment/portfolio-deployment
                     kubectl get pods
                     kubectl get services
